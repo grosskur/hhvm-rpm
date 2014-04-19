@@ -40,10 +40,6 @@ BuildRequires:	freetype-devel
 %else
 BuildRequires:	freetype2-devel
 %endif
-%if 0%{?rhel} == 6
-BuildRequires:  gcc48
-BuildRequires:  gcc48-c++
-%endif
 BuildRequires:	glog-devel
 BuildRequires:	ImageMagick-devel
 %if 0%{?rhel} == 6
