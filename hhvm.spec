@@ -35,40 +35,80 @@ BuildRequires:	cmake
 %endif
 BuildRequires:	binutils-devel
 BuildRequires:	boost-devel
+%if 0%{?rhel} == 6
+BuildRequires:	freetype-devel
+%else
 BuildRequires:	freetype2-devel
+%endif
 %if 0%{?rhel} == 6
 BuildRequires:  gcc48
 BuildRequires:  gcc48-c++
 %endif
 BuildRequires:	glog-devel
 BuildRequires:	ImageMagick-devel
+%if 0%{?rhel} == 6
+BuildRequires:	libc-client-devel
+%else
 BuildRequires:	imap-devel
+%endif
 BuildRequires:	inotify-tools-devel
 BuildRequires:	jemalloc-devel
+%if 0%{?rhel} == 6
+BuildRequires:	bzip2-devel
+%else
 BuildRequires:	libbz2-devel
+%endif
 BuildRequires:	libcap-devel
 BuildRequires:	libcurl-devel
 BuildRequires:	libdwarf-devel
 BuildRequires:	libedit-devel
+%if 0%{?rhel} == 6
+BuildRequires:  elfutils-libelf-devel
+%else
 BuildRequires:	libelf0-devel
+%endif
 BuildRequires:	libevent-devel
+%if 0%{?rhel} == 6
+BuildRequires:	expat-devel
+%else
 BuildRequires:	libexpat-devel
+%endif
 BuildRequires:	libgcrypt-devel
 BuildRequires:	libicu-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libmcrypt-devel
 BuildRequires:	libmemcached-devel
+%if 0%{?rhel} == 6
+BuildRequires:	mysql-devel
+%else
 BuildRequires:	libmysqlclient-devel
+%endif
+%if 0%{?rhel} == 6
+BuildRequires:	numactl-devel
+%else
 BuildRequires:	libnuma-devel
+%endif
+%if 0%{?rhel} == 6
+BuildRequires:	openssl-devel
+%else
 BuildRequires:	libopenssl-devel
+%endif
+%if 0%{?rhel} == 6
+BuildRequires:	libpng-devel
+%else
 BuildRequires:	libpng12-devel
+%endif
 BuildRequires:	libselinux-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt-devel
 BuildRequires:	libzip-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	oniguruma-devel
+%if 0%{?rhel} == 6
+BuildRequires:	openldap-devel
+%else
 BuildRequires:	openldap2-devel
+%endif
 BuildRequires:	pam-devel
 BuildRequires:	pcre-devel
 BuildRequires:	readline-devel
