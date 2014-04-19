@@ -28,10 +28,18 @@ Source2:	hhvm.initscript
 Source3:	hhvm.hdf
 Source4:	hhvm.sysconfig
 BuildRequires:	ocaml
+%if 0%{?rhel} == 6
+BuildRequires:	cmake28
+%else
 BuildRequires:	cmake
+%endif
 BuildRequires:	binutils-devel
 BuildRequires:	boost-devel
 BuildRequires:	freetype2-devel
+%if 0%{?rhel} == 6
+BuildRequires:  gcc48
+BuildRequires:  gcc48-c++
+%endif
 BuildRequires:	glog-devel
 BuildRequires:	ImageMagick-devel
 BuildRequires:	imap-devel
@@ -69,7 +77,7 @@ BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	fdupes
-Requires(post):	%insserv_prereq %fillup_prereq
+#Requires(post):	%insserv_prereq %fillup_prereq
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
@@ -93,7 +101,12 @@ tar --strip-components=1 -xf %{SOURCE1}
 %build
 # % configure
 export CMAKE_PREFIX_PATH=`pwd`
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DLIBINOTIFY_LIBRARY=/usr/lib64/libinotifytools.so .
+%if 0%{?rhel} == 6
+cmake28 \
+%else
+cmake \
+%endif
+  -DCMAKE_INSTALL_PREFIX=/usr -DLIBINOTIFY_LIBRARY=/usr/lib64/libinotifytools.so .
 make %{?_smp_mflags}
 
 %install
