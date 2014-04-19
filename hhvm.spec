@@ -22,8 +22,8 @@ License:	PHP-3.01
 Summary:	HHVM virtual machine, runtime, and JIT for the PHP language
 Url:		http://hhvm.com
 Group:		Development/Languages/Other
-Source:		%{name}-%{version}.tar.gz
-Source1:	folly.tar.gz
+Source:		http://s3.amazonaws.com/cb-mirror/%{name}-%{version}.tar.gz
+Source1:	http://s3.amazonaws.com/cb-mirror/folly.tar.gz
 Source2:	hhvm.initscript
 Source3:	hhvm.hdf
 Source4:	hhvm.sysconfig
