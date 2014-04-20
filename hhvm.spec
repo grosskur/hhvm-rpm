@@ -113,7 +113,6 @@ BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	fdupes
-#Requires(post):	%insserv_prereq %fillup_prereq
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
@@ -147,46 +146,27 @@ make %{?_smp_mflags}
 
 %install
 %make_install
-export DONT_STRIP=1
-rm -rf $RPM_BUILD_ROOT
 %{__install} -p -D -m 0755 hphp/hhvm/hhvm %{buildroot}%{_bindir}/hhvm
 %{__install} -p -D -m 0755 hphp/tools/hphpize/hphpize %{buildroot}%{_bindir}/hphpize
 
 # Install initscript, sysconfig and hhvm configuration
 %{__install} -p -D -m 0755 %{SOURCE2} %{buildroot}%{_initddir}/%{name}
 %{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/hhvm/hhvm.hdf
-%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}/var/adm/fillup-templates/sysconfig.%{name}
-
-%{__mkdir} -p %{buildroot}/%{_sbindir}
-ln -s %{_initddir}/%{name} %{buildroot}/%{_sbindir}/rc%{name}
+%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/hhvm
 
 # Create default directory
 #%{__mkdir} -p %{buildroot}%{_var}/run/%{name}
 #%{__mkdir} -p %{buildroot}%{_var}/log/%{name}
 #%{__mkdir} -p %{buildroot}%{_var}/hhvm
 
-%fdupes -s %{buildroot}/%{_sbindir}
-
-%post
-%fillup_and_insserv
-
-
-%preun
-%stop_on_removal
-
-%postun
-%restart_on_update
-%insserv_cleanup
-
 %files
 %defattr(-,root,root)
 %doc README.md LICENSE.ZEND LICENSE.PHP
 %{_bindir}/hhvm
-%{_sbindir}/rchhvm
-%dir /etc/hhvm
-/var/adm/fillup-templates/sysconfig.%{name}
-%config(noreplace) /etc/hhvm/hhvm.hdf
-%config(noreplace) /etc/init.d/hhvm
+%dir %{_sysconfdir}/hhvm
+%config(noreplace) %{_sysconfdir}/hhvm/hhvm.hdf
+%config(noreplace) %{_sysconfdir}/sysconfig/hhvm
+%{_initddir}/hhvm
 
 %files devel
 %defattr(-,root,root)
