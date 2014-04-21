@@ -15,7 +15,7 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-Name:           hhvm
+Name:       hhvm
 Version:	3.0.1
 Release:	1.2
 License:	PHP-3.01
@@ -27,92 +27,78 @@ Source1:	http://s3.amazonaws.com/cb-mirror/folly.tar.gz
 Source2:	hhvm.initscript
 Source3:	hhvm.hdf
 Source4:	hhvm.sysconfig
-BuildRequires:	ocaml
+
 %if 0%{?rhel} == 6
-BuildRequires:	cmake28
+BuildRequires:	hhvm-cmake
+BuildRequires:	hhvm-boost-devel
+BuildRequires:	freetype-devel
+BuildRequires:	hhvm-glog-devel
+BuildRequires:	hhvm-ImageMagick-devel
+BuildRequires:	libc-client-devel
+BuildRequires:	hhvm-inotify-tools-devel
+BuildRequires:	bzip2-devel
+BuildRequires:	hhvm-jemalloc-devel
+BuildRequires:  hhvm-libdwarf-devel
+BuildRequires:  elfutils-libelf-devel
+BuildRequires:	expat-devel
+BuildRequires:	hhvm-libmcrypt-devel
+BuildRequires:	hhvm-libmemcached-devel
+BuildRequires:	mysql-devel
+BuildRequires:	numactl-devel
+BuildRequires:	openssl-devel
+BuildRequires:	libpng-devel
+BuildRequires:	openldap-devel
+BuildRequires:	hhvm-tbb-devel
+BuildRequires:  devtoolset-2-binutils
+BuildRequires:  devtoolset-2-gcc
+BuildRequires:  devtoolset-2-gcc-c++
 %else
 BuildRequires:	cmake
-%endif
 BuildRequires:	binutils-devel
 BuildRequires:	boost-devel
-%if 0%{?rhel} == 6
-BuildRequires:	freetype-devel
-%else
 BuildRequires:	freetype2-devel
-%endif
 BuildRequires:	glog-devel
 BuildRequires:	ImageMagick-devel
-%if 0%{?rhel} == 6
-BuildRequires:	libc-client-devel
-%else
 BuildRequires:	imap-devel
-%endif
 BuildRequires:	inotify-tools-devel
-BuildRequires:	jemalloc-devel
-%if 0%{?rhel} == 6
-BuildRequires:	bzip2-devel
-%else
 BuildRequires:	libbz2-devel
+BuildRequires:	jemalloc-devel
+BuildRequires:	libdwarf-devel
+BuildRequires:	libelf0-devel
+BuildRequires:	libexpat-devel
+BuildRequires:	libmcrypt-devel
+BuildRequires:	libmemcached-devel
+BuildRequires:	libmysqlclient-devel
+BuildRequires:	libnuma-devel
+BuildRequires:	libopenssl-devel
+BuildRequires:	libpng12-devel
+BuildRequires:	openldap2-devel
+BuildRequires:	tbb-devel
 %endif
+
+BuildRequires:	ocaml
+BuildRequires:	binutils-devel
 BuildRequires:	libcap-devel
 BuildRequires:	libcurl-devel
-BuildRequires:	libdwarf-devel
 BuildRequires:	libedit-devel
-%if 0%{?rhel} == 6
-BuildRequires:  elfutils-libelf-devel
-%else
-BuildRequires:	libelf0-devel
-%endif
 BuildRequires:	libevent-devel
-%if 0%{?rhel} == 6
-BuildRequires:	expat-devel
-%else
-BuildRequires:	libexpat-devel
-%endif
 BuildRequires:	libgcrypt-devel
 BuildRequires:	libicu-devel
 BuildRequires:	libjpeg-devel
-BuildRequires:	libmcrypt-devel
-BuildRequires:	libmemcached-devel
-%if 0%{?rhel} == 6
-BuildRequires:	mysql-devel
-%else
-BuildRequires:	libmysqlclient-devel
-%endif
-%if 0%{?rhel} == 6
-BuildRequires:	numactl-devel
-%else
-BuildRequires:	libnuma-devel
-%endif
-%if 0%{?rhel} == 6
-BuildRequires:	openssl-devel
-%else
-BuildRequires:	libopenssl-devel
-%endif
-%if 0%{?rhel} == 6
-BuildRequires:	libpng-devel
-%else
-BuildRequires:	libpng12-devel
-%endif
 BuildRequires:	libselinux-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt-devel
 BuildRequires:	libzip-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	oniguruma-devel
-%if 0%{?rhel} == 6
-BuildRequires:	openldap-devel
-%else
-BuildRequires:	openldap2-devel
-%endif
 BuildRequires:	pam-devel
 BuildRequires:	pcre-devel
 BuildRequires:	readline-devel
-BuildRequires:	tbb-devel
 BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
+
 BuildRequires:	pkgconfig(libpng)
-BuildRequires:	fdupes
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
@@ -134,14 +120,16 @@ cd hphp/submodules/folly
 tar --strip-components=1 -xf %{SOURCE1}
 
 %build
-# % configure
-export CMAKE_PREFIX_PATH=`pwd`
 %if 0%{?rhel} == 6
-cmake28 \
-%else
-cmake \
+. /opt/rh/devtoolset-2/enable
+export PATH=/opt/hhvm/bin:$PATH
+export CPATH="/opt/hhvm/include:/opt/hhvm/include/libdwarf:$CPATH"
+export CPPFLAGS="-I/opt/hhvm/include -I/opt/hhvm/include/libdwarf $CPPFLAGS"
+export LDFLAGS="-L/opt/hhvm/lib $LDFLAGS"
+export LD_LIBRARY_PATH="/opt/hhvm/lib:$LD_LIBRARY_PATH"
 %endif
-  -DCMAKE_INSTALL_PREFIX=/usr -DLIBINOTIFY_LIBRARY=/usr/lib64/libinotifytools.so .
+export CMAKE_PREFIX_PATH=`pwd`
+cmake -DCMAKE_INSTALL_PREFIX=/usr .
 make %{?_smp_mflags}
 
 %install
@@ -163,6 +151,7 @@ make %{?_smp_mflags}
 %defattr(-,root,root)
 %doc README.md LICENSE.ZEND LICENSE.PHP
 %{_bindir}/hhvm
+%{_libdir}/libzip.so
 %dir %{_sysconfdir}/hhvm
 %config(noreplace) %{_sysconfdir}/hhvm/hhvm.hdf
 %config(noreplace) %{_sysconfdir}/sysconfig/hhvm
@@ -171,6 +160,9 @@ make %{?_smp_mflags}
 %files devel
 %defattr(-,root,root)
 %{_bindir}/hphpize
+%{_includedir}/zip.h
+%{_includedir}/zipconf.h
+%{_libdir}/libzip.a
 
 %changelog
 
